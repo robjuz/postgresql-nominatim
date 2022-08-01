@@ -1,4 +1,5 @@
-FROM bitnami/postgresql:latest as builder
+ARG POSTGRES_VERSION=13.7.0
+FROM bitnami/postgresql:$POSTGRES_VERSION as builder
 ARG NOMINATIM_VERSION=3.7.2
 USER 0
 
@@ -23,7 +24,7 @@ RUN true \
     && cmake -DBUILD_IMPORTER=off -DBUILD_API=off -DBUILD_TESTS=off -DBUILD_DOCS=off -DBUILD_OSM2PGSQL=off ../Nominatim-$NOMINATIM_VERSION \
     && make
 
-FROM bitnami/postgresql:latest
+FROM bitnami/postgresql:$POSTGRES_VERSION
 
 COPY --from=builder build/module/nominatim.so /bitnami
 
